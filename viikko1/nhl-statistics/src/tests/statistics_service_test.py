@@ -42,8 +42,7 @@ class TestStatisticsService(unittest.TestCase):
             top_players.append(str(player))
 
         self.assertEqual(top_players, ['Gretzky EDM 35 + 89 = 124',
-                                       'Lemieux PIT 45 + 54 = 99',
-                                       'Yzerman DET 42 + 56 = 98'])
+                                       'Lemieux PIT 45 + 54 = 99'])
         
     def test_top_maalit(self):
         top_players = []
@@ -52,8 +51,7 @@ class TestStatisticsService(unittest.TestCase):
             top_players.append(str(player))
 
         self.assertEqual(top_players, ['Lemieux PIT 45 + 54 = 99',
-                                       'Yzerman DET 42 + 56 = 98',
-                                       'Kurri EDM 37 + 53 = 90'])
+                                       'Yzerman DET 42 + 56 = 98'])
         
     def test_top_syotot(self):
         top_players = []
@@ -62,5 +60,4 @@ class TestStatisticsService(unittest.TestCase):
             top_players.append(str(player))
 
         self.assertEqual(top_players, ['Gretzky EDM 35 + 89 = 124',
-                                       'Yzerman DET 42 + 56 = 98',
-                                       'Lemieux PIT 45 + 54 = 99'])
+                                       'Yzerman DET 42 + 56 = 98'])

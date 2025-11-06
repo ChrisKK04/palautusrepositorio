@@ -10,6 +10,3 @@ class Player:
     
     def __str__(self):
         return f"{self.name:20} team {self.team:15} {self.goals:2} + {self.assists:2} = {self.goals + self.assists}"
-
-
-# {"name":"Max Crozier","nationality":"CAN","assists":0,"goals":0,"team":"TBL","games":5,"id":8481719}

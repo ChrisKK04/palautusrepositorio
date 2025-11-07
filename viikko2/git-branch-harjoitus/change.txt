@@ -1,3 +1,4 @@
 Some changes
 
 Some more changes in the original clone of the repository
+Change done on the second clone of the repository

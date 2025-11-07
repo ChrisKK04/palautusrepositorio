@@ -1,1 +1,3 @@
 Some changes
+
+Some more changes in the original clone of the repository

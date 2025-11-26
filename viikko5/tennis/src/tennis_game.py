@@ -6,7 +6,7 @@ class TennisGame:
         self.m_score2 = 0
 
     def won_point(self, player_name):
-        if player_name == "player1":
+        if player_name == self.player1_name:
             self.m_score1 = self.m_score1 + 1
         else:
             self.m_score2 = self.m_score2 + 1

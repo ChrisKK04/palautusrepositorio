@@ -1,7 +1,6 @@
 class TennisGame:
-    LEADER_PLAYER1 = 1
-    LEADER_PLAYER2 = -1
-    WINNER_PLAYER1 = 2
+    SCORE_DIFF_ADVANTAGE = 1
+    SCORE_DIFF_WIN = 2
 
     END_CLOSE = 4
 
@@ -51,14 +50,13 @@ class TennisGame:
 
     def _score_lead(self, score1, score2):
         difference = score1 - score2
-        if difference == self.LEADER_PLAYER1:
-            score = f"{self.ADVANTAGE} {self.player1_name}"
-        elif difference == self.LEADER_PLAYER2:
-            score = f"{self.ADVANTAGE} {self.player2_name}"
-        elif difference >= self.WINNER_PLAYER1:
-            score = f"{self.WIN_FOR} {self.player1_name}"
-        else:
-            score = f"{self.WIN_FOR} {self.player2_name}"
+        abs_diff = abs(difference)
+        if abs_diff == self.SCORE_DIFF_ADVANTAGE:
+            winner = self.player1_name if difference > 0 else self.player2_name
+            score = f"{self.ADVANTAGE} {winner}"
+        elif abs_diff >= self.SCORE_DIFF_WIN:
+            winner = self.player1_name if difference > 0 else self.player2_name
+            score = f"{self.WIN_FOR} {winner}"
 
         return score
 

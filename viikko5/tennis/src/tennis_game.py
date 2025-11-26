@@ -3,7 +3,7 @@ class TennisGame:
     LEADER_PLAYER2 = -1
     WINNER_PLAYER1 = 2
 
-    END_CLOSE = 4
+    ENDGAME_THRESHOLD = 4
 
     ADVANTAGE = "Advantage"
     WIN_FOR = "Win for"
@@ -38,7 +38,7 @@ class TennisGame:
         if self.m_score1 == self.m_score2:
             score = self._score_even(self.m_score1)
 
-        elif self.m_score1 >= self.END_CLOSE or self.m_score2 >= self.END_CLOSE:
+        elif self.m_score1 >= self.ENDGAME_THRESHOLD or self.m_score2 >= self.ENDGAME_THRESHOLD:
             score = self._score_lead(self.m_score1, self.m_score2)
         
         else:

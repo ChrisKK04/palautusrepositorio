@@ -1,4 +1,8 @@
 class TennisGame:
+    LOVE = 0
+    FIFTEEN = 1
+    THIRTY = 2
+
     def __init__(self, player1_name, player2_name):
         self.player1_name = player1_name
         self.player2_name = player2_name
@@ -16,17 +20,10 @@ class TennisGame:
         temp_score = 0
 
         if self.m_score1 == self.m_score2:
-            if self.m_score1 == 0:
-                score = "Love-All"
-            elif self.m_score1 == 1:
-                score = "Fifteen-All"
-            elif self.m_score1 == 2:
-                score = "Thirty-All"
-            else:
-                score = "Deuce"
+            return self._score_even(self.m_score1)
+
         elif self.m_score1 >= 4 or self.m_score2 >= 4:
             minus_result = self.m_score1 - self. m_score2
-
             if minus_result == 1:
                 score = "Advantage player1"
             elif minus_result == -1:
@@ -35,6 +32,7 @@ class TennisGame:
                 score = "Win for player1"
             else:
                 score = "Win for player2"
+
         else:
             for i in range(1, 3):
                 if i == 1:
@@ -51,5 +49,17 @@ class TennisGame:
                     score = score + "Thirty"
                 elif temp_score == 3:
                     score = score + "Forty"
+
+        return score
+    
+    def _score_even(self, score):
+        if score == self.LOVE:
+            score = "Love-All"
+        elif score == self.FIFTEEN:
+            score = "Fifteen-All"
+        elif score == self.THIRTY:
+            score = "Thirty-All"
+        else:
+            score = "Deuce"
 
         return score

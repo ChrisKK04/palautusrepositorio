@@ -37,6 +37,7 @@ def main():
             haastava_yksinpeli.pelaa()
         else:
             break
+        # commit 1
 
 
 if __name__ == "__main__":

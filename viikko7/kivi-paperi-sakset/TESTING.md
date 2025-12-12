@@ -27,7 +27,7 @@ python -m pytest test_app.py -v
 
 ## Test Coverage
 
-The test suite includes 19 tests covering:
+The test suite includes 23 tests covering:
 
 ### WebGameState Class Tests
 - Initialization for all game modes (simple AI, advanced AI, PvP)

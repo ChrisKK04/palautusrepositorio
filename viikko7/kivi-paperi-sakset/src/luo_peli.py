@@ -1,6 +1,7 @@
 from kps_pelaaja_vs_pelaaja import KPSPelaajaVsPelaaja
 from kps_tekoaly import KPSTekoaly
 from kps_parempi_tekoaly import KPSParempiTekoaly
+from kps_elite_tekoaly import KPSEliteTekoaly
 
 
 def luo_peli(tyyppi):
@@ -10,5 +11,7 @@ def luo_peli(tyyppi):
         return KPSTekoaly()
     if tyyppi == 'c':
         return KPSParempiTekoaly()
+    if tyyppi == 'd':
+        return KPSEliteTekoaly()
 
     return None

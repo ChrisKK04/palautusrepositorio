@@ -7,6 +7,7 @@ def main():
               "\n (a) Ihmistä vastaan"
               "\n (b) Tekoälyä vastaan"
               "\n (c) Parannettua tekoälyä vastaan"
+              "\n (d) Elite tekoälyä vastaan"
               "\nMuilla valinnoilla lopetetaan"
               )
 
@@ -33,6 +34,13 @@ def main():
 
             haastava_yksinpeli = luo_peli("c")
             haastava_yksinpeli.pelaa()
+        elif vastaus.endswith("d"):
+            print(
+                "Peli loppuu kun pelaaja antaa virheellisen siirron eli jonkun muun kuin k, p tai s"
+            )
+
+            elite_yksinpeli = luo_peli("d")
+            elite_yksinpeli.pelaa()
         else:
             break
 

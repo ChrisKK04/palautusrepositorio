@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from tuomari import Tuomari
 from tekoaly import Tekoaly
 from tekoaly_parannettu import TekoalyParannettu
+from tekoaly_elite import TekoalyElite
 import os
 import uuid
 
@@ -26,6 +27,8 @@ class WebGameState:
             self.ai = Tekoaly()
         elif game_type == 'advanced_ai':
             self.ai = TekoalyParannettu(10)
+        elif game_type == 'elite_ai':
+            self.ai = TekoalyElite(100)
         else:
             self.ai = None
         
@@ -46,6 +49,8 @@ class WebGameState:
         if self.ai is None:
             return
         if isinstance(self.ai, TekoalyParannettu):
+            self.ai.aseta_siirto(player_move)
+        elif isinstance(self.ai, TekoalyElite):
             self.ai.aseta_siirto(player_move)
     
     def play_round(self, player1_move, player2_move):
@@ -115,6 +120,8 @@ def start_game():
         player2_name = 'Tekoäly (yksinkertainen)'
     elif game_type == 'advanced_ai':
         player2_name = 'Tekoäly (parannettu)'
+    elif game_type == 'elite_ai':
+        player2_name = 'Tekoäly (Elite)'
     
     return jsonify({
         'success': True,

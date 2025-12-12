@@ -4,6 +4,7 @@ import os
 sys.path.insert(0, os.path.dirname(__file__))
 
 from app import app, WebGameState, game_states, ROUNDS_TO_WIN
+from tekoaly_elite import TekoalyElite
 
 
 @pytest.fixture
@@ -32,6 +33,13 @@ class TestWebGameState:
         game = WebGameState('advanced_ai')
         assert game.game_type == 'advanced_ai'
         assert game.ai is not None
+        assert game.game_finished == False
+        
+    def test_init_elite_ai(self):
+        game = WebGameState('elite_ai')
+        assert game.game_type == 'elite_ai'
+        assert game.ai is not None
+        assert isinstance(game.ai, TekoalyElite)
         assert game.game_finished == False
         
     def test_init_pvp(self):
@@ -139,6 +147,14 @@ class TestFlaskRoutes:
         assert data['success'] == True
         assert data['player2_name'] == 'Tekoäly (parannettu)'
         
+    def test_start_game_elite_ai(self, client):
+        response = client.post('/api/start_game',
+                              json={'game_type': 'elite_ai'})
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['success'] == True
+        assert data['player2_name'] == 'Tekoäly (Elite)'
+        
     def test_start_game_pvp(self, client):
         response = client.post('/api/start_game',
                               json={'game_type': 'pvp'})
@@ -163,6 +179,21 @@ class TestFlaskRoutes:
         assert 'player1_score' in data
         assert 'player2_score' in data
         assert 'draws' in data
+        
+    def test_play_round_elite_ai_mode(self, client):
+        # Start elite AI game
+        start_response = client.post('/api/start_game',
+                                    json={'game_type': 'elite_ai'})
+        game_id = start_response.get_json()['game_id']
+        
+        # Play multiple rounds
+        for _ in range(3):
+            response = client.post('/api/play_round',
+                                  json={'game_id': game_id, 'move': 'k'})
+            assert response.status_code == 200
+            data = response.get_json()
+            assert 'player1_move' in data
+            assert 'player2_move' in data
         
     def test_play_round_invalid_game_id(self, client):
         response = client.post('/api/play_round',
@@ -278,6 +309,103 @@ class TestFlaskRoutes:
         response = client.post('/api/play_round',
                              json={'game_id': game_id, 'move': 'k'})
         assert response.status_code == 400
+
+
+class TestTekoalyElite:
+    """Test the TekoalyElite AI class."""
+    
+    def test_init(self):
+        ai = TekoalyElite(100)
+        assert ai._history == []
+        assert ai._ai_history == []
+        assert ai._history_size == 100
+    
+    def test_counter_moves(self):
+        ai = TekoalyElite()
+        assert ai._counter('k') == 'p'
+        assert ai._counter('p') == 's'
+        assert ai._counter('s') == 'k'
+    
+    def test_beats_logic(self):
+        ai = TekoalyElite()
+        assert ai._beats('k', 's') == True
+        assert ai._beats('p', 'k') == True
+        assert ai._beats('s', 'p') == True
+        assert ai._beats('k', 'p') == False
+        assert ai._beats('p', 's') == False
+        assert ai._beats('s', 'k') == False
+        assert ai._beats('k', 'k') == False
+    
+    def test_records_opponent_moves(self):
+        ai = TekoalyElite(10)
+        ai.aseta_siirto('k')
+        ai.aseta_siirto('p')
+        ai.aseta_siirto('s')
+        
+        assert ai._history == ['k', 'p', 's']
+    
+    def test_history_bounded(self):
+        ai = TekoalyElite(3)
+        for i in range(5):
+            ai.aseta_siirto('k')
+        
+        # History should only keep last 3 items
+        assert len(ai._history) == 3
+    
+    def test_generates_valid_move(self):
+        ai = TekoalyElite()
+        move = ai.anna_siirto()
+        assert move in ['k', 'p', 's']
+    
+    def test_frequency_analysis(self):
+        """Test that elite AI counters most frequent move."""
+        ai = TekoalyElite()
+        # Opponent mostly plays rock
+        for _ in range(5):
+            ai.aseta_siirto('k')
+        ai.aseta_siirto('p')
+        ai.aseta_siirto('s')
+        
+        prediction = ai._frequency_analysis()
+        assert prediction == 'p'  # Should counter rock with paper
+    
+    def test_pattern_detection(self):
+        """Test pattern matching in opponent moves."""
+        ai = TekoalyElite()
+        # Create a repeating pattern
+        pattern = ['k', 'p', 's']
+        ai._history = pattern + pattern + ['k']
+        
+        next_move = ai._find_sequence_pattern(ai._history)
+        assert next_move is not None
+
+
+class TestEliteAIIntegration:
+    """Test elite AI in game context."""
+    
+    def test_elite_ai_game_state(self):
+        game = WebGameState('elite_ai')
+        assert game.ai is not None
+        assert isinstance(game.ai, TekoalyElite)
+        
+        # Play several rounds
+        for _ in range(5):
+            ai_move = game.get_ai_move()
+            player_move = 'k'
+            game.record_ai_move(player_move)
+            
+            assert ai_move in ['k', 'p', 's']
+    
+    def test_elite_ai_learns_from_patterns(self):
+        game = WebGameState('elite_ai')
+        
+        # Play multiple rock moves
+        for _ in range(3):
+            game.record_ai_move('k')
+        
+        # AI should counter with paper
+        ai_move = game.get_ai_move()
+        assert ai_move == 'p'  # Counters rock with paper
 
 
 if __name__ == '__main__':

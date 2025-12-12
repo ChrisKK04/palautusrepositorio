@@ -4,9 +4,10 @@ A web-based rock-paper-scissors game built with Flask, featuring multiple game m
 
 ## Features
 
-- 🎮 **Three Game Modes:**
+- 🎮 **Four Game Modes:**
   - **Simple AI**: Basic computer opponent with predictable patterns
   - **Advanced AI**: Intelligent opponent that learns from your moves
+  - **Elite AI**: Advanced strategy using history matching and pattern analysis
   - **Player vs Player**: Two-player mode with turn-based gameplay
 
 - 🎨 **Modern Web Interface:**
@@ -16,8 +17,9 @@ A web-based rock-paper-scissors game built with Flask, featuring multiple game m
   - Clean, intuitive UI with gradient design
 
 - 🧪 **Comprehensive Test Suite:**
-  - 23 automated tests covering all functionality
+  - 30+ automated tests covering all functionality
   - Tests for game logic, API endpoints, game flows, and game ending conditions
+  - Includes tests for Elite AI strategy learning
   - Easy to run with provided scripts
   - Tests automatically adapt to configured rounds-to-win setting
 
@@ -65,11 +67,33 @@ The application will start on **http://localhost:5000**
 
 Open your web browser and navigate to `http://localhost:5000` to play!
 
-### Playing the Game
+### Playing from Terminal
 
-1. **Select a game mode** by clicking one of the three buttons:
+You can also play the game directly from the command line:
+
+```bash
+cd src
+python index.py
+```
+
+The terminal menu will show:
+```
+Valitse pelataanko
+ (a) Ihmistä vastaan
+ (b) Tekoälyä vastaan
+ (c) Parannettua tekoälyä vastaan
+ (d) Elite tekoälyä vastaan
+Muilla valinnoilla lopetetaan
+```
+
+Select an option and play by entering moves (k = kivi, p = paperi, s = sakset).
+
+### Playing the Web Game
+
+1. **Select a game mode** by clicking one of the four buttons:
    - Tekoäly (helppo) - Simple AI
    - Tekoäly (vaikea) - Advanced AI
+   - Tekoäly (Elite) - Elite AI with advanced strategies
    - Kaksinpeli - Two players
 
 2. **Make your move** by clicking Kivi (Rock), Paperi (Paper), or Sakset (Scissors)
@@ -115,6 +139,7 @@ All 23 tests should pass, covering:
 - Game ending conditions (winning required rounds)
 - API endpoints
 - PvP game flow
+- Elite AI strategy tests
 - Error handling
 - Preventing play after game ends
 
@@ -130,9 +155,11 @@ kivi-paperi-sakset/
 │   ├── kps_pelaaja_vs_pelaaja.py # PvP implementation
 │   ├── kps_tekoaly.py           # Simple AI implementation
 │   ├── kps_parempi_tekoaly.py   # Advanced AI implementation
+│   ├── kps_elite_tekoaly.py     # Elite AI implementation (terminal)
 │   ├── luo_peli.py              # Game factory
 │   ├── tekoaly.py               # Simple AI logic
 │   ├── tekoaly_parannettu.py    # Advanced AI logic
+│   ├── tekoaly_elite.py         # Elite AI logic (advanced strategies)
 │   ├── tuomari.py               # Game referee/scorer
 │   └── templates/
 │       └── index.html           # Web interface
@@ -194,6 +221,16 @@ After changing the value, restart the Flask server for changes to take effect.
 - Uses memory-based pattern recognition
 - Learns from your previous moves
 - Predicts your next move based on history
+
+**Elite AI (`TekoalyElite`):**
+- Inspired by the Iocaine Powder algorithm (winner of 1999 International RPS Programming Championship)
+- Implements multiple advanced strategies:
+  - **History Matching**: Detects and exploits repeating patterns in opponent moves
+  - **Frequency Analysis**: Counters most frequently played moves
+  - **Adaptive Counters**: Learns recent bias towards specific moves
+  - **Metastrategies**: Detects if opponent is countering your strategy and adapts
+  - **Randomization**: Uses random fallback to prevent predictability
+- Most challenging AI opponent
 - More challenging opponent
 
 ### PvP Mode

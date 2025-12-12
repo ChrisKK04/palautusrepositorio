@@ -97,7 +97,7 @@ class WebGameState:
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', rounds_to_win=ROUNDS_TO_WIN)
 
 
 @app.route('/api/start_game', methods=['POST'])

@@ -8,7 +8,7 @@ import uuid
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
 # Game configuration - change this value to set rounds needed to win
-ROUNDS_TO_WIN = 5
+ROUNDS_TO_WIN = 3
 
 # Store game states in memory
 game_states = {}

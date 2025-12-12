@@ -154,7 +154,7 @@ kivi-paperi-sakset/
 
 ### Changing Rounds to Win
 
-The game ends when one player wins a configurable number of rounds (default: 5).
+The game ends when one player wins a configurable number of rounds (default: 3).
 
 **To change this setting:**
 
@@ -162,7 +162,7 @@ Edit `src/app.py` and modify the `ROUNDS_TO_WIN` constant at the top of the file
 
 ```python
 # Game configuration - change this value to set rounds needed to win
-ROUNDS_TO_WIN = 5  # Change to any number you want
+ROUNDS_TO_WIN = 3  # Change to any number you want
 ```
 
 This single change will automatically update:
@@ -180,7 +180,7 @@ After changing the value, restart the Flask server for changes to take effect.
 - **Scissors (Sakset)** beats Paper
 
 ### Winning the Game
-- First player to win `ROUNDS_TO_WIN` rounds wins the game (default: 5)
+- First player to win `ROUNDS_TO_WIN` rounds wins the game (default: 3)
 - Draw rounds don't count towards the win total
 - Game buttons are disabled once a winner is declared
 

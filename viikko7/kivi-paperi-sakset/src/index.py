@@ -37,10 +37,6 @@ def main():
             haastava_yksinpeli.pelaa()
         else:
             break
-        # commit 1
-        # commit 2
-        # commit 3 on haara
-
 
 if __name__ == "__main__":
     main()

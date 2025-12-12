@@ -7,14 +7,20 @@ import uuid
 
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
+# Game configuration - change this value to set rounds needed to win
+ROUNDS_TO_WIN = 5
+
 # Store game states in memory
 game_states = {}
 
 
 class WebGameState:
-    def __init__(self, game_type):
+    def __init__(self, game_type, rounds_to_win=ROUNDS_TO_WIN):
         self.game_type = game_type
         self.tuomari = Tuomari()
+        self.rounds_to_win = rounds_to_win
+        self.game_finished = False
+        self.winner = None
         
         if game_type == 'simple_ai':
             self.ai = Tekoaly()
@@ -46,14 +52,27 @@ class WebGameState:
         if not (self.is_valid_move(player1_move) and self.is_valid_move(player2_move)):
             return None
         
+        if self.game_finished:
+            return None
+        
         self.tuomari.kirjaa_siirto(player1_move, player2_move)
+        
+        # Check if game is finished
+        if self.tuomari.ekan_pisteet >= self.rounds_to_win:
+            self.game_finished = True
+            self.winner = 1
+        elif self.tuomari.tokan_pisteet >= self.rounds_to_win:
+            self.game_finished = True
+            self.winner = 2
         
         return {
             'player1_move': self.translate_move(player1_move),
             'player2_move': self.translate_move(player2_move),
             'player1_score': self.tuomari.ekan_pisteet,
             'player2_score': self.tuomari.tokan_pisteet,
-            'draws': self.tuomari.tasapelit
+            'draws': self.tuomari.tasapelit,
+            'game_finished': self.game_finished,
+            'winner': self.winner
         }
     
     def translate_move(self, move):
@@ -69,7 +88,10 @@ class WebGameState:
         return {
             'player1_score': self.tuomari.ekan_pisteet,
             'player2_score': self.tuomari.tokan_pisteet,
-            'draws': self.tuomari.tasapelit
+            'draws': self.tuomari.tasapelit,
+            'game_finished': self.game_finished,
+            'winner': self.winner,
+            'rounds_to_win': self.rounds_to_win
         }
 
 
@@ -97,7 +119,8 @@ def start_game():
     return jsonify({
         'success': True,
         'game_id': game_id,
-        'player2_name': player2_name
+        'player2_name': player2_name,
+        'rounds_to_win': ROUNDS_TO_WIN
     })
 
 
@@ -111,6 +134,9 @@ def play_round():
         return jsonify({'error': 'Game not found'}), 400
     
     game_state = game_states[game_id]
+    
+    if game_state.game_finished:
+        return jsonify({'error': 'Game already finished'}), 400
     
     if not game_state.is_valid_move(player_move):
         return jsonify({'error': 'Invalid move'}), 400

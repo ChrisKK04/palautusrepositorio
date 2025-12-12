@@ -307,6 +307,8 @@
         let currentGameType = null;
         let currentGameId = null;
         let gameStarted = false;
+        let gameFinished = false;
+        let roundsToWin = 5;
         let currentTurn = 1; // For PvP mode
 
         async function selectMode(mode) {
@@ -331,6 +333,8 @@
             if (response.ok) {
                 const data = await response.json();
                 currentGameId = data.game_id;
+                roundsToWin = data.rounds_to_win || 5;
+                gameFinished = false;
                 
                 if (mode === 'pvp') {
                     document.getElementById('player2Name').textContent = 'Pelaaja 2';
@@ -344,7 +348,7 @@
                 gameStarted = true;
                 resetScores();
                 updateTurnDisplay();
-                document.getElementById('message').textContent = '';
+                document.getElementById('message').textContent = `Ensimmäinen ${roundsToWin} voittoon!`;
             }
         }
 
@@ -391,6 +395,11 @@
         async function playMove(move, playerNum) {
             if (!gameStarted) {
                 alert('Aloita peli ensin!');
+                return;
+            }
+
+            if (gameFinished) {
+                alert('Peli on päättynyt! Aloita uusi peli.');
                 return;
             }
 
@@ -447,7 +456,19 @@
             document.getElementById('player2Score').textContent = data.player2_score;
             document.getElementById('drawsScore').textContent = data.draws;
 
-            // Determine the result
+            // Check if game is finished
+            if (data.game_finished) {
+                gameFinished = true;
+                if (data.winner === 1) {
+                    document.getElementById('message').textContent = '🎉 PELI PÄÄTTYI! Pelaaja 1 voitti pelin!';
+                } else if (data.winner === 2) {
+                    document.getElementById('message').textContent = '🎉 PELI PÄÄTTYI! Pelaaja 2 voitti pelin!';
+                }
+                disableGameButtons();
+                return;
+            }
+
+            // Determine the round result
             const p1 = data.player1_move.charAt(0).toLowerCase();
             const p2 = data.player2_move.charAt(0).toLowerCase();
 
@@ -458,10 +479,15 @@
                 (p1 === 'p' && p2 === 'k') ||
                 (p1 === 's' && p2 === 'p')
             ) {
-                document.getElementById('message').textContent = 'Pelaaja 1 voitti!';
+                document.getElementById('message').textContent = 'Pelaaja 1 voitti kierroksen!';
             } else {
-                document.getElementById('message').textContent = 'Pelaaja 2 voitti!';
+                document.getElementById('message').textContent = 'Pelaaja 2 voitti kierroksen!';
             }
+        }
+
+        function disableGameButtons() {
+            const allButtons = document.querySelectorAll('.move-btn');
+            allButtons.forEach(btn => btn.disabled = true);
         }
 
         function resetScores() {
@@ -474,6 +500,7 @@
 
         function resetGame() {
             gameStarted = false;
+            gameFinished = false;
             currentGameType = null;
             currentGameId = null;
             currentTurn = 1;
@@ -484,6 +511,10 @@
             resetScores();
             document.getElementById('message').textContent = '';
             document.getElementById('player2Name').textContent = 'Vastustaja';
+            
+            // Re-enable all buttons
+            const allButtons = document.querySelectorAll('.move-btn');
+            allButtons.forEach(btn => btn.disabled = false);
         }
     </script>
 </body>

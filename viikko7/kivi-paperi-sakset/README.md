@@ -16,9 +16,10 @@ A web-based rock-paper-scissors game built with Flask, featuring multiple game m
   - Clean, intuitive UI with gradient design
 
 - 🧪 **Comprehensive Test Suite:**
-  - 19 automated tests covering all functionality
-  - Tests for game logic, API endpoints, and game flows
+  - 23 automated tests covering all functionality
+  - Tests for game logic, API endpoints, game flows, and game ending conditions
   - Easy to run with provided scripts
+  - Tests automatically adapt to configured rounds-to-win setting
 
 ## Installation
 
@@ -107,13 +108,15 @@ cd src
 python -m pytest test_app.py -v
 ```
 
-All 19 tests should pass, covering:
+All 23 tests should pass, covering:
 - Game initialization
 - Move validation
 - Round outcomes
+- Game ending conditions (winning required rounds)
 - API endpoints
 - PvP game flow
 - Error handling
+- Preventing play after game ends
 
 ## Project Structure
 
@@ -147,12 +150,39 @@ kivi-paperi-sakset/
 - **Testing:** pytest 7.0+
 - **Architecture:** RESTful API with session-less game state management
 
+## Configuration
+
+### Changing Rounds to Win
+
+The game ends when one player wins a configurable number of rounds (default: 5).
+
+**To change this setting:**
+
+Edit `src/app.py` and modify the `ROUNDS_TO_WIN` constant at the top of the file:
+
+```python
+# Game configuration - change this value to set rounds needed to win
+ROUNDS_TO_WIN = 5  # Change to any number you want
+```
+
+This single change will automatically update:
+- Backend game logic
+- Frontend display
+- All test cases
+
+After changing the value, restart the Flask server for changes to take effect.
+
 ## Game Logic
 
 ### Move Rules
 - **Rock (Kivi)** beats Scissors
 - **Paper (Paperi)** beats Rock
 - **Scissors (Sakset)** beats Paper
+
+### Winning the Game
+- First player to win `ROUNDS_TO_WIN` rounds wins the game (default: 5)
+- Draw rounds don't count towards the win total
+- Game buttons are disabled once a winner is declared
 
 ### AI Opponents
 

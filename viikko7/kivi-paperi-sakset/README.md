@@ -132,7 +132,7 @@ cd src
 python -m pytest test_app.py -v
 ```
 
-All 23 tests should pass, covering:
+All 36 tests should pass, covering:
 - Game initialization
 - Move validation
 - Round outcomes
